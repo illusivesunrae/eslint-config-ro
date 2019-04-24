@@ -33,8 +33,8 @@ Next you will need to configure the configuration for your project using one of 
 3. `.eslintrc.js`
 
 ```
-module.exports ={
-  "extends": "eslint-config-rivet"
+module.exports = {
+  'extends': 'eslint-config-rivet'
 }
 ```
 
@@ -52,10 +52,10 @@ npm install --save-dev gulp gulp-eslint
 Next, you will need to incorporate this into your `Gulp` setup. Below is an example `gulpfile.js`, which shows how to include the build tool in your file and how to write the linting task.
 
 ```
-const { dest, series, src, watch } = require("gulp");
+const { src } = require("gulp");
 const eslint = require("gulp-eslint");
 
-function lintJS() {
+function lintJSBuild() {
   return src(["src/js/**/*.js", "!node_modules/**"])
     .pipe(eslint())
     .pipe(eslint.format())
@@ -69,3 +69,38 @@ function lintJSWatch() {
 }
 
 ```
+
+We recommend writing separate functions for linting `build` versus `watch` tasks. For lint functions related to your `build` tasks we recommend including `.pipe(eslint.failAfterError());`. This will cause your `build` to fail if it encounters any error-level rules.
+
+### rollup
+Some Rivet projects may use `rollup` to bundle code together (usually as part of the `npm run build` script). It is also fairly easy to incorporate `ESLint` into the `rollup`-related task, rather than `Gulp` directly.
+
+```
+const rollup = require('rollup');
+const { eslint } = require('rollup-plugin-eslint');
+
+function compileJS() {
+  return rollup
+    .rollup({
+      input: './src/js/' + package.name + '.js',
+      plugins: [
+        eslint({ throwOnError: true })
+    ]
+    })
+    .then(bundle => {
+      return bundle.write({
+        file: './docs/js/' + package.name + '.js',
+        format: 'umd',
+        name: package.addOnName,
+        sourcemap: true
+      });
+    });
+}
+
+```
+
+Again, because this is a `build`-related task, we recommend that you set the `throwOnError` option to `true`, as this will cause your `build` to fail if it encounters any error-level rules.
+
+### Additional integrations
+
+ESLint has [integrations available for most of the major, modern code editors](https://eslint.org/docs/user-guide/integrations#editors).
