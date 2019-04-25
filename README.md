@@ -73,7 +73,7 @@ function lintJSWatch() {
 We recommend writing separate functions for linting `build` versus `watch` tasks. For lint functions related to your `build` tasks we recommend including `.pipe(eslint.failAfterError());`. This will cause your `build` to fail if it encounters any error-level rules.
 
 ### Gulp with rollup API
-Some Rivet projects may use `rollup` to bundle code together (usually as part of the `npm run build` script). It is also fairly easy to incorporate `ESLint` into the `rollup`-related task, rather than `Gulp` directly.
+Some Rivet projects may use `rollup` to bundle code together (usually as part of the `npm run build` script). It is also possible to incorporate `ESLint` into the `rollup`-related task, rather than `Gulp` directly.
 
 First, you will need to make sure that `rollup` and its `ESLint` build tool are installed.
 
